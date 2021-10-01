@@ -1,5 +1,9 @@
+import imp
 import tensorflow as tf
+import os
+import logging
 
+logger = logging.getLogger(__name__)
 
 def data_preparation(data):
 
@@ -11,9 +15,18 @@ def data_preparation(data):
 
     X_test = X_test / 255.
 
+    logger.info("---Data Preparation done----")
+
     return X_train,y_train,X_valid,y_valid,X_test,y_test
 
 
 def save_model(model):
-    model.save("model.h5")
+
+    logger.info("saving the trained model")
+    model_dir = "models"
+    filename = "model.h5"
+    os.makedirs(model_dir, exist_ok=True) 
+    model_name = os.path.join(model_dir,filename)
+
+    model.save(model_name)
 

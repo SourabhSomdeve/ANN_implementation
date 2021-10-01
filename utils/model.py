@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import tensorflow as tf
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ANN_model():
 
@@ -30,32 +33,34 @@ class ANN_model():
 
         self.model_clf.compile(loss=LOSS_FUNCTION, optimizer=OPTIMIZER, metrics=METRICS)
 
-    
         VALIDATION = (X_valid, y_valid)
+
+        logger.info("----Training started------")
 
         history = self.model_clf.fit(X_train, y_train, epochs=self.epochs, validation_data=VALIDATION)
 
 
-
     def predict(self,X_test,y_test):
 
+        logger.info("--Evaluating on the Test data--")
 
         self.model_clf.evaluate(X_test, y_test)
+
+        logger.info("Showing the result of first 3 data points")
 
         X_new = X_test[:3]
 
         y_prob = self.model_clf.predict(X_new)
 
-        y_prob.round(3)
-
         Y_pred= np.argmax(y_prob, axis=-1)
-        Y_pred
-
+        
         for img_array, pred, actual in zip(X_new, Y_pred, y_test[:3]):
-        plt.imshow(img_array, cmap="binary")
-        plt.title(f"predicted: {pred}, Actual: {actual}")
-        plt.axis("off")
-        plt.show()
-        print("---"*20)
+            plt.imshow(img_array, cmap="binary")
+            plt.title(f"predicted: {pred}, Actual: {actual}")
+            plt.axis("off")
+            plt.show()
+            print("---"*20)
+
+        return self.model_clf
 
     
